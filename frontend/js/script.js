@@ -10,7 +10,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // ========== BACKEND BASE URL ==========
-const backendURL = "https://todo-backend-v8rw.onrender.com";
+const backendURL = "https://todo-app-3d1z.onrender.com";
 
 // ========== NAVBAR ==========
 function handleNavbar() {
