@@ -9,8 +9,21 @@ window.addEventListener("DOMContentLoaded", () => {
   loadTasks();
 });
 
+document.getElementById("start-button")?.addEventListener("click", () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user && localStorage.getItem("token")) {
+    // Already logged in — scroll to tasks or hero section
+    document
+      .getElementById("hero-section")
+      ?.scrollIntoView({ behavior: "smooth" });
+  } else {
+    // Not logged in — redirect to signup
+    window.location.href = "signup.html";
+  }
+});
+
 // ========== BACKEND BASE URL ==========
-const backendURL = "https://todo-app-3d1z.onrender.com";
+const backendURL = "https://todo-backend-umn6.onrender.com";
 
 // ========== NAVBAR ==========
 function handleNavbar() {
