@@ -1187,7 +1187,7 @@ body {
   outline-offset: 2px;
 }
 
-/* ========== DARK MODE SUPPORT ========== */
+/* ========== DARK MODE SUPPORT ==========  
 @media (prefers-color-scheme: dark) {
   :root {
     --white: #1f2937;
@@ -1212,6 +1212,7 @@ body {
     );
   }
 }
+ */
 
 /* ========== PRINT STYLES ========== */
 @media print {
