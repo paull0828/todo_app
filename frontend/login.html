@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | To-Do App</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <!-- Login Container -->
+    <div class="auth-container">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="identifier">Mobile Number or Email</label>
+          <input type="text" id="identifier" required />
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" required />
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+      </form>
+
+      <p class="form-footer">
+        Don't have an account? <a href="signup.html">Sign Up</a>
+      </p>
+    </div>
+
+    <script src="./js/script.js"></script>
+  </body>
+</html>
