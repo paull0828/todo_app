@@ -11,11 +11,16 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://todo-app-drab-six-17.vercel.app",
+];
+
 app.use(
   cors({
-    origin: "https://todo-app-drab-six-17.vercel.app",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PATCH", "DELETE"],
-    credentials: true, // only if using cookies (optional)
+    credentials: true,
   })
 );
 
