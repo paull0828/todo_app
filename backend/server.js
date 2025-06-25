@@ -1,4 +1,3 @@
-// backend/server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -10,38 +9,39 @@ const taskRoutes = require("./routes/tasks");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// === CORS Setup ===
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://todo-app-drab-six-17.vercel.app",
   "http://127.0.0.1:5500",
+  "https://todo-app-drab-six-17.vercel.app",
 ];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error("CORS not allowed for this origin"));
       }
     },
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
-app.options("*", cors());
+
+// === Middleware ===
 app.use(express.json());
 
-// Routes
+// === Routes ===
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// Connect to MongoDB and start server
+// === Connect DB & Start Server ===
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("MongoDB connected");
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    console.log("✅ MongoDB connected");
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
   })
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
