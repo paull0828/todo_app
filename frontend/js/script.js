@@ -6,6 +6,9 @@ window.addEventListener("DOMContentLoaded", () => {
   loadTasks(); // only runs if task section exists
 });
 
+// ========== BACKEND BASE URL ==========
+const backendURL = "https://todo-backend.onrender.com";
+
 // ========== NAVBAR ==========
 function handleNavbar() {
   const navIcons = document.getElementById("nav-icons");
@@ -67,7 +70,7 @@ async function handleSignup(e) {
     return alert("Password must be at least 6 characters.");
 
   try {
-    const res = await fetch("http://localhost:5000/api/auth/signup", {
+    const res = await fetch(`${backendURL}/api/auth/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, age, phone, email, password }),
@@ -94,7 +97,7 @@ async function handleLogin(e) {
   if (!identifier || !password) return alert("Fill both fields.");
 
   try {
-    const res = await fetch("http://localhost:5000/api/auth/login", {
+    const res = await fetch(`${backendURL}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ identifier, password }),
@@ -115,19 +118,12 @@ async function handleLogin(e) {
   }
 }
 
-// ========== TASK MANAGEMENT (MongoDB + Auth Protected) ========== //
-
-window.addEventListener("DOMContentLoaded", () => {
-  handleNavbar();
-  setupEventListeners();
-  loadTasks();
-});
-
+// ========== TASK MANAGEMENT ==========
 function getToken() {
   return localStorage.getItem("token");
 }
 
-function setupEventListeners() {
+function setupTaskEventListeners() {
   const addBtn = document.getElementById("addTaskBtn");
   const dateInput = document.getElementById("taskDate");
 
@@ -153,11 +149,11 @@ async function handleAddTask() {
 
   if (!text) return alert("Task cannot be empty.");
   if (text.length > 100) return alert("Max 100 characters allowed.");
-  const today = new Date().toISOString().split("T")[0];
-  if (date < today) return alert("Cannot select a past date.");
+  if (date < new Date().toISOString().split("T")[0])
+    return alert("Cannot select a past date.");
 
   try {
-    const res = await fetch("http://localhost:5000/api/tasks", {
+    const res = await fetch(`${backendURL}/api/tasks`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -168,8 +164,7 @@ async function handleAddTask() {
 
     if (res.status === 401) {
       alert("You are not logged in. Please login to continue.");
-      window.location.href = "login.html";
-      return;
+      return (window.location.href = "login.html");
     }
 
     const data = await res.json();
@@ -197,16 +192,13 @@ async function loadTasks() {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/tasks", {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+    const res = await fetch(`${backendURL}/api/tasks`, {
+      headers: { Authorization: "Bearer " + token },
     });
 
     if (res.status === 401) {
       alert("You are not logged in. Please login to view your tasks.");
-      window.location.href = "login.html";
-      return;
+      return (window.location.href = "login.html");
     }
 
     const tasks = await res.json();
@@ -262,9 +254,10 @@ function taskItemHTML(task) {
   `;
 }
 
+// ========== TOGGLE, DELETE, EDIT ==========
 async function toggleDone(id, status) {
   try {
-    await fetch(`http://localhost:5000/api/tasks/${id}`, {
+    await fetch(`${backendURL}/api/tasks/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -281,11 +274,9 @@ async function toggleDone(id, status) {
 async function deleteTask(id) {
   if (!confirm("Are you sure you want to delete this task?")) return;
   try {
-    await fetch(`http://localhost:5000/api/tasks/${id}`, {
+    await fetch(`${backendURL}/api/tasks/${id}`, {
       method: "DELETE",
-      headers: {
-        Authorization: "Bearer " + getToken(),
-      },
+      headers: { Authorization: "Bearer " + getToken() },
     });
     loadTasks();
     alert("Task deleted.");
@@ -301,7 +292,7 @@ async function editTask(id, oldText) {
   if (newText.length > 100) return alert("Max 100 characters allowed.");
 
   try {
-    const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+    const res = await fetch(`${backendURL}/api/tasks/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -322,21 +313,12 @@ async function editTask(id, oldText) {
   }
 }
 
-//view task
-// Show today's title or default
-function updateTaskSectionTitle(viewingAll = false) {
-  const titleEl = document.getElementById("taskSectionTitle");
-  if (titleEl) {
-    titleEl.textContent = viewingAll ? "All Tasks" : "Today's Tasks";
-  }
-}
-
-// View All Button Logic
+// ========== VIEW ALL TASKS ==========
 document.getElementById("viewAllBtn")?.addEventListener("click", showAllTasks);
 
 async function showAllTasks() {
   try {
-    const res = await fetch("http://localhost:5000/api/tasks", {
+    const res = await fetch(`${backendURL}/api/tasks`, {
       headers: { Authorization: "Bearer " + getToken() },
     });
 
@@ -345,7 +327,7 @@ async function showAllTasks() {
     const container = document.getElementById("allTasksContainer");
 
     container.innerHTML = Object.keys(grouped)
-      .sort((a, b) => new Date(b) - new Date(a)) // latest date first
+      .sort((a, b) => new Date(b) - new Date(a))
       .map(
         (date) => `
           <div class="date-group">
