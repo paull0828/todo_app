@@ -24,7 +24,7 @@ document.getElementById("start-button")?.addEventListener("click", () => {
 
 // ========== BACKEND BASE URL ==========
 // const backendURL = "https://todo-backend-umn6.onrender.com";
-const backendURL = "http://localhost:5000";
+const backendURL = "https://todo-app-sye4.onrender.com";
 
 // ========== NAVBAR ==========
 function handleNavbar() {
