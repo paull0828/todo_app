@@ -23,7 +23,8 @@ document.getElementById("start-button")?.addEventListener("click", () => {
 });
 
 // ========== BACKEND BASE URL ==========
-const backendURL = "https://todo-backend-umn6.onrender.com";
+// const backendURL = "https://todo-backend-umn6.onrender.com";
+const backendURL = "http://localhost:5000";
 
 // ========== NAVBAR ==========
 function handleNavbar() {
@@ -330,7 +331,15 @@ async function editTask(id, oldText) {
 }
 
 // ========== VIEW ALL TASKS ==========
-document.getElementById("viewAllBtn")?.addEventListener("click", showAllTasks);
+document.getElementById("viewAllBtn")?.addEventListener("click", function () {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
+  if (!user || !token) {
+    alert("Please log in first to view all tasks.");
+    return;
+  }
+  showAllTasks();
+});
 
 async function showAllTasks() {
   try {
